@@ -14,6 +14,7 @@
 ExportedObj/
 .consulo/
 .vscode
+.plastic/
 *.csproj
 *.unityproj
 *.sln
@@ -43,3 +44,5 @@ crashlytics-build.properties
 
 UserSettings/
 UIElementsSchema/
+ignore.conf
+Assets/ThirdPartyAssets/
