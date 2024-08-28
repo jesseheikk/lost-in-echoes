@@ -4,18 +4,17 @@ using System.Collections.Generic;
 public class PlanetPopulator : MonoBehaviour
 {
     [SerializeField] GameObject[] blockPrefabs;
-    [SerializeField] float blockScaleFactor = 1.0f; // TODO: Scale this automatically to fill the planet
+    [SerializeField] float blockScaleFactor = 1.0f; // TODO: Scale this automatically according to planet size
 
     Mesh icosphereMesh;
     Vector3[] vertices;
 
     void Start()
     {
-        // Get the MeshFilter component and access the mesh and vertices
+        // Get the MeshFilter component to access the vertices
         icosphereMesh = GetComponent<MeshFilter>().mesh;
         vertices = icosphereMesh.vertices;
 
-        // Populate the icosphere with blocks at each vertex
         Populate();
     }
 
@@ -30,27 +29,22 @@ public class PlanetPopulator : MonoBehaviour
             // Convert local vertex position to world position
             Vector3 spawnPosition = transform.TransformPoint(vertex);
 
-            // Add the spawn position to the HashSet if it's not already there
             if (uniquePositions.Add(spawnPosition))
             {
-                // Choose a random prefab from the array
-                GameObject selectedPrefab = blockPrefabs[Random.Range(0, blockPrefabs.Length)];
-
-                // Instantiate the block at the calculated position
-                SpawnBlock(selectedPrefab, spawnPosition);
+                GameObject randomPrefab = blockPrefabs[Random.Range(0, blockPrefabs.Length)];
+                SpawnBlock(randomPrefab, spawnPosition);
             }
         }
     }
 
     void SpawnBlock(GameObject prefab, Vector3 position)
     {
-        // Instantiate the block at the specified position
         GameObject block = Instantiate(prefab, position, Quaternion.identity, transform);
 
         // Adjust the block's rotation to face outward from the planet's center
         block.transform.up = position.normalized;
 
-        // Adjust the block's position to ensure it is perfectly on the surface
+        // Adjust the block's position to ensure it lays on the surface without any gaps
         float distanceFromCenter = position.magnitude;
         Vector3 surfacePosition = position.normalized * distanceFromCenter;
         block.transform.position = surfacePosition;

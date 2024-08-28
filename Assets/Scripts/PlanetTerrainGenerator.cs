@@ -3,23 +3,21 @@ using UnityEngine;
 [RequireComponent(typeof(MeshFilter), typeof(MeshCollider))]
 public class PlanetTerrainGenerator : MonoBehaviour
 {
-    public float noiseScale = 0.3f;  // Controls the scale of the noise
-    public float heightMultiplier = 0.5f;  // Controls the maximum height variation
+    [SerializeField] float noiseScale = 0.3f;
+    [SerializeField] float heightMultiplier = 0.5f;
 
-    private Mesh sphereMesh;
-    private Vector3[] originalVertices;
-    private Vector3[] modifiedVertices;
+    Mesh sphereMesh;
+    Vector3[] originalVertices;
+    Vector3[] modifiedVertices;
 
     void Start()
     {
-        // Get the mesh from the sphere
         sphereMesh = GetComponent<MeshFilter>().mesh;
 
         // Get the original vertices of the sphere
         originalVertices = sphereMesh.vertices;
         modifiedVertices = new Vector3[originalVertices.Length];
 
-        // Apply noise to the sphere's vertices
         GenerateTerrain();
 
         // Update the collider with the new mesh
@@ -46,7 +44,6 @@ public class PlanetTerrainGenerator : MonoBehaviour
             modifiedVertices[i] = originalVertex.normalized * height;
         }
 
-        // Update the mesh with the new vertices
         sphereMesh.vertices = modifiedVertices;
 
         // Recalculate normals to ensure lighting is correct
@@ -58,11 +55,9 @@ public class PlanetTerrainGenerator : MonoBehaviour
 
     void UpdateCollider()
     {
-        // Get the MeshCollider component
         MeshCollider meshCollider = GetComponent<MeshCollider>();
 
         // Assign the modified mesh to the MeshCollider
-        meshCollider.sharedMesh = null; // Clear the existing mesh to ensure proper update
-        meshCollider.sharedMesh = sphereMesh; // Assign the modified mesh
-    }
+        meshCollider.sharedMesh = null;
+        meshCollider.sharedMesh = sphereMesh;
 }

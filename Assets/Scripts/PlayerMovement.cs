@@ -18,7 +18,7 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rb.freezeRotation = true;
+        rb.freezeRotation = true;   // Prevent player from falling from planets gravity
     }
 
     void Update()
@@ -34,15 +34,13 @@ public class PlayerMovement : MonoBehaviour
 
     void CheckInput()
     {
-        // Get input for movement
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
-        // Calculate the direction the player should move in, relative to their orientation
+        // Calculate the direction the player should move in, relative to its orientation
         moveDirection = transform.forward * vertical + transform.right * horizontal;
 
-        // Jumping
-        if (Input.GetButtonDown("Jump") && isGrounded) // Check jump input in Update
+        if (Input.GetButtonDown("Jump") && isGrounded)
         {
             Jump();
         }
@@ -50,13 +48,11 @@ public class PlayerMovement : MonoBehaviour
 
     void MovePlayer()
     {
-        // Move the player
         rb.MovePosition(rb.position + moveDirection * moveSpeed * Time.fixedDeltaTime);
     }
 
     void ApplyGravity()
     {
-        // Calculate gravity direction (pointing towards the planet's center)
         Vector3 gravityDirection = (transform.position - planet.position).normalized;
 
         // Apply the gravity force towards the planet's center
@@ -66,13 +62,11 @@ public class PlayerMovement : MonoBehaviour
         Quaternion targetRotation = Quaternion.FromToRotation(transform.up, gravityDirection) * transform.rotation;
         rb.MoveRotation(Quaternion.Slerp(transform.rotation, targetRotation, 10 * Time.fixedDeltaTime));
 
-        // Check if the player is grounded
         isGrounded = Physics.Raycast(transform.position, -transform.up, groundCheckDistance, groundLayer);
     }
 
     void Jump()
     {
-        // Apply jump force in the direction opposite to gravity
         Vector3 jumpDirection = transform.up;
         rb.AddForce(jumpDirection * jumpForce, ForceMode.VelocityChange);
     }
