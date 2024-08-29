@@ -60,4 +60,5 @@ public class PlanetTerrainGenerator : MonoBehaviour
         // Assign the modified mesh to the MeshCollider
         meshCollider.sharedMesh = null;
         meshCollider.sharedMesh = sphereMesh;
+    }
 }
